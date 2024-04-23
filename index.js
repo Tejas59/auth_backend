@@ -12,7 +12,7 @@ const app = express();
 app.use(express.json());
 
 app.use(cors({
-    origin:["http://localhost:5173"],
+    origin:["https://unrivaled-sable-89725f.netlify.app"],
     methods:["GET", "post"],
     credentials: true
 }));
