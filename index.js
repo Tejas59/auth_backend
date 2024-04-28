@@ -71,6 +71,15 @@ app.post("/", async (req, res) => {
       const token = jwt.sign({ email: user.email, role: user.role }, "jwt-secret-key", { expiresIn: "1d" });
       res.cookie("token", token);
       return res.json({ status: "success", role: user.role, name: user.name });
+    }else if (user.lastLoginAttempt === null) {
+      const now = new Date();
+      const nullUser = await UserModel.findOneAndUpdate(
+        { email },
+        { $inc: { loginAttempts: 1 }, lastLoginAttempt: now },
+        { new: true }
+      );
+    
+      return res.status(401).json({ message: "Incorrect email or password. Please try again." });
     } else {
       const now = new Date();
       const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
